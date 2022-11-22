@@ -53,22 +53,19 @@ class Director:
         banner = cast.get_first_actor("banners")
         robot = cast.get_first_actor("robots")
         artifacts = cast.get_actors("artifacts")
-        #floors = cast.get_actors("floor")
 
-        #banner.set_text()
         max_x = self._video_service.get_width()
         max_y = self._video_service.get_height()
         robot.move_next(max_x, max_y)
         
-        #max_y -= 100
         robot_x = robot.get_position().get_x()
         robot_y = robot.get_position().get_y()
         for artifact in artifacts:
-            #if robot.get_position().equals(artifact.get_position()):
             if artifact.passed_over(robot_x,robot_y):
                 points = artifact.get_value()
                 banner.set_text(points)
                 cast.remove_actor("artifacts", artifact)
+                # TO DO: add feature to display collected gem artifacts
                 #cast.add_actor("collected", artifact)
             else:
                 artifact.move_next(max_x,max_y)

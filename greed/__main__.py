@@ -61,7 +61,7 @@ def main():
         floor.set_position(Point(n, y + FONT_SIZE))
         cast.add_actor("floor", floor)
 
-    # create the artifacts
+    # DEPRICATED create the artifacts
     # with open(DATA_PATH) as file:
     #     data = file.read()
     #     gemvalues = data.splitlines()
@@ -73,12 +73,15 @@ def main():
 
     for n in range(DEFAULT_ARTIFACTS):
         # select value randomly from value array, include percent chance for rock
-        # skin according to value and randomize starting location at max y range
+        # TO DO: add feature that spawns more artifacts and shortens len(gemvalues)
+        # TO DO: add feature to create cooler/larger gem representation
+        # skin according to value and randomize starting location in max y range
         randindx = random.randrange(0, len(gemvalues))
         value = gemvalues[randindx]
         text = gemtext[randindx]
         color = Color(gemcolors[randindx][0],
-                      gemcolors[randindx][1], gemcolors[randindx][2])
+                      gemcolors[randindx][1],
+                      gemcolors[randindx][2])
         x = random.randint(1, COLS - 1)
         y = random.randint(3, 7)
         position = Point(x, y)

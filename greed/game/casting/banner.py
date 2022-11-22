@@ -6,7 +6,6 @@ class Banner(Actor):
     The responsibility of Banner(Actor) is to keep score and display score updates.
 
     Attributes:
-        _value (int): The score value of the gem/rock
         _max_score (int): The highest score achieved in this run
         _score (int): The current score in this run
         _points (int): The last point value that modified the score
@@ -47,7 +46,11 @@ class Banner(Actor):
         return self._text
 
     def positive_score(self):
-        """Checks if the player still has a positive score"""
+        """Checks if the player still has a positive score
+        
+        Returns:
+            bool: True if score >= 0.
+        """
         if self._score >= 0:
             return True
         return False

@@ -39,6 +39,11 @@ class Artifact(Actor):
         return self._value
 
     def passed_over(self,target_x,target_y):
+        """Indicates if the artifact has passed over a target.
+        
+        Returns:
+            bool: If the target was passed over.
+        """
         if target_x == super().get_position().get_x():
             if target_y == super().get_position().get_y():
                 return True
