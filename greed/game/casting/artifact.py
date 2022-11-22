@@ -1,13 +1,13 @@
 from game.casting.actor import Actor
 
 class Artifact(Actor):
-    """A child of Actor, represents the discoverable elements on the map.
+    """A child of Actor, represents the collectable elements on the map.
 
     The responsibility of Artifact(Actor) is to keep track of its appearance, position and velocity in 2d 
     space.
 
     Attributes:
-        _message (string): The message to show when the Artifact is found
+        _value (int): The score value of the gem/rock
 
     Inherited Attributes:
         _text (string): The text to display
@@ -20,20 +20,28 @@ class Artifact(Actor):
     def __init__(self):
         """Constructs a new Artifact."""
         super().__init__()
-        self._message = ""
+        self._value = 0
 
-    def set_message(self, message):
-        """Gets the artifact's display message.
+    def set_value(self, value):
+        """Sets the artifact's score value.
 
         Args:
-            message (string): The given value.
+            value (int): The artifact's score value.
         """
-        self._message = message
+        self._value = value
 
-    def get_message(self):
-        """Gets the artifact's display message.
+    def get_value(self):
+        """Gets the artifact's score value.
 
         Returns:
-            string: The artifact's display message.
+            int: The artifact's score value.
         """
-        return self._message
+        return self._value
+
+    def passed_over(self,target_x,target_y):
+        if target_x == super().get_position().get_x():
+            if target_y == super().get_position().get_y():
+                return True
+            elif target_y < super().get_position().get_y() and target_y > super().get_position().get_y() - super().get_velocity().get_y():
+                return True
+        return False

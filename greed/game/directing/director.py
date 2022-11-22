@@ -17,6 +17,7 @@ class Director:
         """
         self._keyboard_service = keyboard_service
         self._video_service = video_service
+        self._is_playing = True
         
     def start_game(self, cast):
         """Starts the game using the given cast. Runs the main game loop.
@@ -25,9 +26,11 @@ class Director:
             cast (Cast): The cast of actors.
         """
         self._video_service.open_window()
-        while self._video_service.is_window_open():
+        while self._is_playing and self._video_service.is_window_open():
             self._get_inputs(cast)
             self._do_updates(cast)
+            self._do_outputs(cast)
+        while self._video_service.is_window_open():
             self._do_outputs(cast)
         self._video_service.close_window()
 
@@ -39,7 +42,7 @@ class Director:
         """
         robot = cast.get_first_actor("robots")
         velocity = self._keyboard_service.get_direction()
-        robot.set_velocity(velocity)        
+        robot.set_velocity(velocity)
 
     def _do_updates(self, cast):
         """Updates the robot's position and resolves any collisions with artifacts.
@@ -50,16 +53,25 @@ class Director:
         banner = cast.get_first_actor("banners")
         robot = cast.get_first_actor("robots")
         artifacts = cast.get_actors("artifacts")
+        #floors = cast.get_actors("floor")
 
-        banner.set_text("")
+        #banner.set_text()
         max_x = self._video_service.get_width()
         max_y = self._video_service.get_height()
         robot.move_next(max_x, max_y)
         
+        #max_y -= 100
+        robot_x = robot.get_position().get_x()
+        robot_y = robot.get_position().get_y()
         for artifact in artifacts:
-            if robot.get_position().equals(artifact.get_position()):
-                message = artifact.get_message()
-                banner.set_text(message)    
+            #if robot.get_position().equals(artifact.get_position()):
+            if artifact.passed_over(robot_x,robot_y):
+                points = artifact.get_value()
+                banner.set_text(points)
+                cast.remove_actor("artifacts", artifact)
+                #cast.add_actor("collected", artifact)
+            else:
+                artifact.move_next(max_x,max_y)
         
     def _do_outputs(self, cast):
         """Draws the actors on the screen.
@@ -71,3 +83,7 @@ class Director:
         actors = cast.get_all_actors()
         self._video_service.draw_actors(actors)
         self._video_service.flush_buffer()
+        
+        banner = cast.get_first_actor("banners")
+        if not banner.positive_score():
+            self._is_playing = False
